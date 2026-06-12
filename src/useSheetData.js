@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
 
 // ─── CONFIGURAÇÃO ──────────────────────────────────────────────
-// Cole aqui o ID da sua planilha do Google Drive
-// Ex: https://docs.google.com/spreadsheets/d/AQUI_O_ID/edit
-export const SHEET_ID = import.meta.env.VITE_SHEET_ID || 'COLE_O_ID_AQUI'
-
-// Nome exato da aba na planilha (padrão: primeira aba)
-const SHEET_TAB = 'Untitled'
+// URL publicada via Arquivo > Publicar na web > CSV
+// Para atualizar: gere nova URL e substitua aqui
+const SHEET_CSV_URL = import.meta.env.VITE_SHEET_CSV_URL ||
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhJwXPdMuoWPVXI8R93-k7eJMNZi84UwIyPSUc2GEqbZWpGiVzZ2i8Kvnq1EiWP-Fus95jvp9kGMNx/pub?output=csv'
 // ──────────────────────────────────────────────────────────────
 
 function getObjetivo(campanha) {
@@ -163,9 +161,8 @@ export function useSheetData() {
         setLoading(true)
         setError(null)
 
-        // Exportar planilha como CSV (sem autenticação, planilha pública)
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_TAB)}`
-        const res = await fetch(url)
+        // Buscar CSV da planilha publicada
+        const res = await fetch(SHEET_CSV_URL)
         if (!res.ok) throw new Error(`Erro ao buscar planilha: ${res.status}`)
         const csv = await res.text()
 
