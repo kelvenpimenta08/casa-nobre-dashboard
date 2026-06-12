@@ -173,8 +173,9 @@ export function useSheetData() {
             ?.map(v => v.replace(/^"|"$/g, '').trim()) || []
         }).filter(r => r.some(v => v !== ''))
 
-        // Pular linha 0 (título da planilha) e usar linha 1 como header
-        const processed = processRows(rows.slice(1))
+        // Filtrar linhas vazias — linha 1 vazia no CSV publicado, linha 2 é cabeçalho
+        const nonEmpty = rows.filter(r => r.some(v => v !== ""))
+        const processed = processRows(nonEmpty)
         setData(processed)
         setUpdatedAt(new Date())
       } catch (e) {
